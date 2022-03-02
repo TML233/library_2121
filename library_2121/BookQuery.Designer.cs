@@ -54,7 +54,7 @@ namespace library_2121 {
 			// 
 			this.inputCategory.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.inputCategory.Location = new System.Drawing.Point(91, 88);
-			this.inputCategory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.inputCategory.Margin = new System.Windows.Forms.Padding(4);
 			this.inputCategory.Name = "inputCategory";
 			this.inputCategory.Size = new System.Drawing.Size(136, 36);
 			this.inputCategory.TabIndex = 3;
@@ -63,7 +63,7 @@ namespace library_2121 {
 			// 
 			this.btnQuery.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnQuery.Location = new System.Drawing.Point(25, 132);
-			this.btnQuery.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.btnQuery.Margin = new System.Windows.Forms.Padding(4);
 			this.btnQuery.Name = "btnQuery";
 			this.btnQuery.Size = new System.Drawing.Size(111, 39);
 			this.btnQuery.TabIndex = 4;
@@ -75,7 +75,7 @@ namespace library_2121 {
 			// 
 			this.btnQuit.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.btnQuit.Location = new System.Drawing.Point(144, 132);
-			this.btnQuit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.btnQuit.Margin = new System.Windows.Forms.Padding(4);
 			this.btnQuit.Name = "btnQuit";
 			this.btnQuit.Size = new System.Drawing.Size(111, 39);
 			this.btnQuit.TabIndex = 8;
@@ -87,7 +87,7 @@ namespace library_2121 {
 			// 
 			this.dataBook.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataBook.Location = new System.Drawing.Point(25, 179);
-			this.dataBook.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.dataBook.Margin = new System.Windows.Forms.Padding(4);
 			this.dataBook.Name = "dataBook";
 			this.dataBook.RowHeadersWidth = 51;
 			this.dataBook.RowTemplate.Height = 27;
@@ -179,12 +179,13 @@ namespace library_2121 {
 			this.Controls.Add(this.inputCategory);
 			this.Controls.Add(this.lblTitle);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "BookQuery";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Book";
+			this.Load += new System.EventHandler(this.BookQuery_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dataBook)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

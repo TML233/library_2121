@@ -25,9 +25,6 @@ namespace library_2121 {
 				conn.Open();
 				int affected=cmd.ExecuteNonQuery();
 				return affected;
-			} catch (Exception e) {
-				MessageBox.Show(e.ToString());
-				return -1;
 			} finally {
 				conn.Close();
 			}
@@ -43,29 +40,27 @@ namespace library_2121 {
 			try {
 				conn.Open();
 				return cmd.ExecuteScalar();
-			} catch (Exception e) {
-				MessageBox.Show(e.ToString());
-				return null;
 			} finally {
 				conn.Close();
 			}
 		}
 
-		public static SqlDataReader ExecuteReader(string sql, params object[] parameters) {
+		public static IEnumerable<SqlDataReader> ExecuteReader(string sql, params object[] parameters) {
 			SqlConnection conn = GetConnection();
 			SqlCommand cmd = new SqlCommand(sql, conn);
 			for (int i = 0; i < parameters.Length; i += 1) {
 				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
 			}
 
+			SqlDataReader reader = null;
 			try {
 				conn.Open();
-				var reader = cmd.ExecuteReader();
-				return reader;
-			} catch (Exception e) {
-				MessageBox.Show(e.ToString());
-				return null;
+				reader = cmd.ExecuteReader();
+				while (reader.Read()) {
+					yield return reader;
+				}
 			} finally {
+				reader?.Close();
 				conn.Close();
 			}
 		}
@@ -80,7 +75,6 @@ namespace library_2121 {
 			try {
 				DataTable dt = new DataTable();
 				SqlDataAdapter adp = new SqlDataAdapter(cmd);
-
 				adp.Fill(dt);
 				return dt;
 			} finally {

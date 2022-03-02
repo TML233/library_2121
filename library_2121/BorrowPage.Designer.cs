@@ -50,7 +50,7 @@ namespace library_2121 {
 			// 
 			this.data.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.data.Location = new System.Drawing.Point(13, 122);
-			this.data.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.data.Margin = new System.Windows.Forms.Padding(4);
 			this.data.Name = "data";
 			this.data.RowHeadersWidth = 72;
 			this.data.RowTemplate.Height = 33;
@@ -71,7 +71,7 @@ namespace library_2121 {
 			// inputCard
 			// 
 			this.inputCard.Location = new System.Drawing.Point(134, 74);
-			this.inputCard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.inputCard.Margin = new System.Windows.Forms.Padding(4);
 			this.inputCard.Name = "inputCard";
 			this.inputCard.Size = new System.Drawing.Size(213, 31);
 			this.inputCard.TabIndex = 3;
@@ -80,7 +80,7 @@ namespace library_2121 {
 			// inputBook
 			// 
 			this.inputBook.Location = new System.Drawing.Point(478, 74);
-			this.inputBook.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.inputBook.Margin = new System.Windows.Forms.Padding(4);
 			this.inputBook.Name = "inputBook";
 			this.inputBook.Size = new System.Drawing.Size(240, 31);
 			this.inputBook.TabIndex = 5;
@@ -99,7 +99,7 @@ namespace library_2121 {
 			// btnSubmit
 			// 
 			this.btnSubmit.Location = new System.Drawing.Point(764, 68);
-			this.btnSubmit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.btnSubmit.Margin = new System.Windows.Forms.Padding(4);
 			this.btnSubmit.Name = "btnSubmit";
 			this.btnSubmit.Size = new System.Drawing.Size(117, 42);
 			this.btnSubmit.TabIndex = 6;
@@ -110,7 +110,7 @@ namespace library_2121 {
 			// button1
 			// 
 			this.button1.Location = new System.Drawing.Point(889, 68);
-			this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.button1.Margin = new System.Windows.Forms.Padding(4);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(117, 42);
 			this.button1.TabIndex = 7;
@@ -131,7 +131,7 @@ namespace library_2121 {
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.data);
 			this.Controls.Add(this.label1);
-			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "BorrowPage";
 			this.Text = "BorrowPage";
 			this.Load += new System.EventHandler(this.BorrowPage_Load);
