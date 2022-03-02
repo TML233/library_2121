@@ -52,8 +52,7 @@ namespace library_2121 {
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataReader.CurrentRow;
 				string intId = Convert.ToString(dgvr.Cells["借书证号"].Value);
-				String strSql = "Delete From reader Where 借书证号 = '" + intId + "'";
-				if (Utils.ExecuteUpdate(strSql)>0) {
+				if (Utils.ExecuteUpdate("Delete From reader Where 借书证号 = @0", intId) > 0) {
 					dataReader.Rows.Remove(dgvr);
 					MessageBox.Show("删除成功！", "软件提示");
 				} else {

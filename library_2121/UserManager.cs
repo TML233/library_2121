@@ -52,8 +52,7 @@ namespace library_2121 {
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataUser.CurrentRow;
 				string intId = Convert.ToString(dgvr.Cells["用户名"].Value);
-                string strSql = "Delete From open1 Where 用户名 = '" + intId + "'";
-				if (Utils.ExecuteUpdate(strSql)>0) {
+				if (Utils.ExecuteUpdate("Delete From open1 Where 用户名 = @0", intId) >0) {
 					dataUser.Rows.Remove(dgvr);
 					MessageBox.Show("删除成功！", "软件提示");
 				} else {

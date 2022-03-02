@@ -119,7 +119,7 @@
     <Compile Include="BookInfo.Designer.cs">
       <DependentUpon>BookInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataClass\Utils.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>

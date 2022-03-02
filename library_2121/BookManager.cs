@@ -30,11 +30,11 @@ namespace library_2121 {
 			string param = textBox.Text;
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
 				sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
-			}else if (radioId.Checked) {
+			} else if (radioId.Checked) {
 				sql = "SELECT * FROM book WHERE 图书编号=@Param ORDER BY 入库日期 DESC";
-			}else if (radioType.Checked) {
+			} else if (radioType.Checked) {
 				sql = "SELECT * FROM book WHERE 分类=@Param ORDER BY 入库日期 DESC";
-			}else if (radioName.Checked) {
+			} else if (radioName.Checked) {
 				sql = "SELECT * FROM book WHERE 书名 LIKE @Param ORDER BY 入库日期 DESC";
 				param = string.Format("%{0}%", textBox.Text);
 			} else if (radioAuthor.Checked) {
@@ -42,8 +42,8 @@ namespace library_2121 {
 			} else if (radioPublisher.Checked) {
 				sql = "SELECT * FROM book WHERE 出版社=@Param ORDER BY 入库日期 DESC";
 			}
-			
-			var set=Utils.ExecuteQuery(sql, "book", ("@Param", param));
+
+			var set = Utils.ExecuteQuery(sql, "book", ("@Param", param));
 			dataBook.DataSource = set.Tables["book"].DefaultView;
 		}
 
@@ -58,8 +58,7 @@ namespace library_2121 {
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataBook.CurrentRow;
 				string intId = Convert.ToString(dgvr.Cells["图书编号"].Value);
-				String strSql = "Delete From book Where 图书编号 = '" + intId + "'";
-				if (Utils.ExecuteUpdate(strSql)>0) {
+				if (Utils.ExecuteUpdate("Delete From book Where 图书编号 = @0", intId) > 0) {
 					dataBook.Rows.Remove(dgvr);
 					MessageBox.Show("删除成功！", "软件提示");
 				} else {

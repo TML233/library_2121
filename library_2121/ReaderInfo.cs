@@ -44,20 +44,20 @@ namespace library_2121 {
 
 		private void btnNext_Click(object sender, EventArgs e) {
 			if (editMode) {
-				int edited = Utils.ExecuteUpdate(string.Format(
-					"update reader set [姓名]='{1}',[性别]='{2}',[单位]='{3}',[级别]='{4}',[已借书数]='{5}',[登记日期]='{6}',[电话号码]='{7}',[电子邮件地址]='{8}',[挂失]='{9}',[过期罚款]='{10}',[借书总数]='{11}',[借书天数]='{12}' where [借书证号]='{0}'",
-					inputId.Text, inputName.Text, cbGender.Text, inputDepartment.Text, cbLevel.Text, inputBorrowed.Text, dateRegister.Value.ToString("yyyy-MM-dd"), inputPhone.Text, inputEmail.Text, cbLost.Text, cbFine.Text, cbBookNum.Text, cbDays.Text
-				));
+				int edited = Utils.ExecuteUpdate(
+					"update reader set [姓名]=@0,[性别]=@1,[单位]=@2,[级别]=@3,[已借书数]=@4,[登记日期]=@5,[电话号码]=@6,[电子邮件地址]=@7,[挂失]=@8,[过期罚款]=@9,[借书总数]=@10,[借书天数]=@11 where [借书证号]=@12",
+					inputName.Text, cbGender.Text, inputDepartment.Text, cbLevel.Text, inputBorrowed.Text, dateRegister.Value.ToString("yyyy-MM-dd"), inputPhone.Text, inputEmail.Text, cbLost.Text, cbFine.Text, cbBookNum.Text, cbDays.Text, inputId.Text
+				);
 				if (edited > 0) {
 					MessageBox.Show("修改成功！");
 				} else {
 					MessageBox.Show("修改失败！");
 				}
 			} else {
-				int edited = Utils.ExecuteUpdate(string.Format(
-					"insert into reader([借书证号],[姓名],[性别],[单位],[级别],[已借书数],[登记日期],[电话号码],[电子邮件地址],[挂失],[过期罚款],[借书总数],[借书天数]) Values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')",
+				int edited = Utils.ExecuteUpdate(
+					"insert into reader([借书证号],[姓名],[性别],[单位],[级别],[已借书数],[登记日期],[电话号码],[电子邮件地址],[挂失],[过期罚款],[借书总数],[借书天数]) Values(@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12)",
 					inputId.Text, inputName.Text, cbGender.Text, inputDepartment.Text, cbLevel.Text, inputBorrowed.Text, dateRegister.Value.ToString("yyyy-MM-dd"), inputPhone.Text, inputEmail.Text, cbLost.Text, cbFine.Text, cbBookNum.Text, cbDays.Text
-				));
+				);
 				if (edited > 0) {
 					MessageBox.Show("添加成功！");
 				} else {

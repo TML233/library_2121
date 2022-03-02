@@ -147,10 +147,8 @@ namespace library_2121 {
 
 			if (mode != Mode.AdminEdit) {
 				int affected = Utils.ExecuteUpdate(
-					"INSERT INTO open1(用户名,口令,级别,姓名,身份证号,邮箱,手机号码,创建时间) VALUES(@User,@Password,@Type,@Name,@Iden,@Email,@Phone,@Time)",
-					("@User", user), ("@Password", password), ("@Type", "a"),
-					("@Name", name), ("@Iden", iden), ("@Email", email),
-					("@Phone", phone), ("@Time", DateTimeOffset.Now.ToString())
+					"INSERT INTO open1(用户名,口令,级别,姓名,身份证号,邮箱,手机号码,创建时间) VALUES(@0,@1,@2,@3,@4,@5,@6,@7)",
+					user, password, "a", name, iden, email, phone, DateTimeOffset.Now.ToString()
 				);
 				if (affected > 0) {
 					MessageBox.Show("注册成功！");
@@ -160,10 +158,8 @@ namespace library_2121 {
 				}
 			} else {
 				int affected = Utils.ExecuteUpdate(
-					"UPDATE open1 set 口令=@Password, 级别=@Type, 姓名=@Name, 身份证号=@Iden, 邮箱=@Email, 手机号码=@Phone WHERE 用户名=@User",
-					("@User", user), ("@Password", password), ("@Type", "a"),
-					("@Name", name), ("@Iden", iden), ("@Email", email),
-					("@Phone", phone)
+					"UPDATE open1 set 口令=@1, 级别=@2, 姓名=@3, 身份证号=@4, 邮箱=@5, 手机号码=@6 WHERE 用户名=@0",
+					user, password, "a", name, iden, email, phone
 				);
 				if (affected > 0) {
 					MessageBox.Show("修改成功！");

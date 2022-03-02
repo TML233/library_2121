@@ -78,8 +78,8 @@ namespace library_2121 {
 			}
 
 			int affected = Utils.ExecuteUpdate(
-				"UPDATE open1 set 口令=@Password WHERE 用户名=@User",
-				("@User", user), ("@Password", password)
+				"UPDATE open1 set 口令=@0 WHERE 用户名=@1",
+				user, password
 			);
 			if (affected > 0) {
 				MessageBox.Show("修改成功！");

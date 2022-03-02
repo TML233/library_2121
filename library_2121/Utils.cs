@@ -16,11 +16,11 @@ namespace library_2121 {
 			return new SqlConnection(ConnectionString);
 		}
 
-		public static int ExecuteUpdate(string sql,params (string name,object value)[] parameters) {
+		public static int ExecuteUpdate(string sql,params object[] parameters) {
 			SqlConnection conn = GetConnection();
 			SqlCommand cmd = new SqlCommand(sql, conn);
-			foreach(var v in parameters) {
-				cmd.Parameters.AddWithValue(v.name, v.value);
+			for (int i = 0; i < parameters.Length; i += 1) {
+				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
 			}
 
 			try {
@@ -34,6 +34,25 @@ namespace library_2121 {
 				conn.Close();
 			}
 		}
+
+		public static object ExecuteScalar(string sql, params object[] parameters) {
+			SqlConnection conn = GetConnection();
+			SqlCommand cmd = new SqlCommand(sql, conn);
+			for (int i = 0; i < parameters.Length; i += 1) {
+				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
+			}
+
+			try {
+				conn.Open();
+				return cmd.ExecuteScalar();
+			} catch (Exception e) {
+				MessageBox.Show(e.ToString());
+				return null;
+			} finally {
+				conn.Close();
+			}
+		}
+
 		public static DataSet ExecuteQuery(string sql,string table, params (string name, object value)[] parameters) {
 			SqlConnection conn = GetConnection();
 

@@ -42,7 +42,11 @@ namespace library_2121 {
 
 		private void btnNext_Click(object sender, EventArgs e) {
 			if (editMode) {
-				int edited = Utils.ExecuteUpdate("update book set 分类='" + inputCategory.Text + "',书名='" + inputName.Text + "',作者='" + inputAuthor.Text + "',出版社='" + inputPublisher.Text + "',出版日期='" + datePublish.Value.Date + "',定价=" + inputPrice.Text + ",入库日期='" + dateEnter.Text + "',状态='" + inputStatus.Text + "',所放位置='" + comboPosition.Text + "',备注='" + inputComment.Text + "'  where 图书编号='" + inputId.Text + "'");
+				int edited = Utils.ExecuteUpdate(
+					"update book set 分类=@0,书名=@1,作者=@2,出版社=@3,出版日期=@4,定价=@5,入库日期=@6,状态=@7,所放位置=@8,备注=@9 where 图书编号=@10",
+					inputCategory.Text, inputName.Text, inputAuthor.Text, inputPublisher.Text, datePublish.Value.Date, inputPrice.Text, dateEnter.Text,
+					inputStatus.Text, comboPosition.Text, inputComment.Text, inputId.Text
+				);
 				if (edited > 0) {
 					MessageBox.Show("修改成功！");
 				} else {
