@@ -58,38 +58,32 @@ namespace library_2121
 				return;
 			}
 
-			SqlConnection conn = Utils.GetConnection();
-			conn.Open();
-			SqlCommand cmd = new SqlCommand("SELECT * FROM open1 WHERE 用户名=@User AND 口令=@Password",conn);
-			cmd.Parameters.AddWithValue("@User", user);
-			cmd.Parameters.AddWithValue("@Password", password);
-			SqlDataReader reader = cmd.ExecuteReader();
-			
-			if (reader.HasRows) {
-				reader.Read();
+			int result = 0;
+			foreach (var reader in Utils.ExecuteReader("SELECT * FROM open1 WHERE 用户名=@0 AND 口令=@1", user, password)) {
 				if (radioUser.Checked && reader["级别"].ToString().Trim() == "a") {
-					conn.Close();
-					InitInputs();
-
-					var main = new UserMenu();
-					main.ShowDialog();
-					return;
+					result = 1;
+					break;
 				}
 				if (radioAdmin.Checked && reader["级别"].ToString().Trim() == "b") {
-					conn.Close();
-					InitInputs();
-
-					var main = new AdminMenu();
-					main.ShowDialog();
-					return;
+					result = 2;
+					break;
 				}
 			}
-			conn.Close();
 
-			if (MessageBox.Show("用户名或密码错误！是否重新输入？", "登陆失败", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+			if (result == 0) {
+				if (MessageBox.Show("用户名或密码错误！是否重新输入？", "登陆失败", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+					InitInputs();
+				} else {
+					GenerateCode();
+				}
+			} else if (result == 1) {
 				InitInputs();
-			} else {
-				GenerateCode();
+				var main = new UserMenu();
+				main.ShowDialog();
+			} else if (result == 2) {
+				InitInputs();
+				var main = new AdminMenu();
+				main.ShowDialog();
 			}
 		}
 

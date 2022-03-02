@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text.RegularExpressions;
 using System.Configuration;
-using System.Windows.Forms;
 
 namespace library_2121 {
 	public class Utils {
 		public static string ConnectionString => ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
 
-		public static SqlConnection GetConnection() => new SqlConnection(ConnectionString);
-
-		public static int ExecuteUpdate(string sql,params object[] parameters) {
-			SqlConnection conn = GetConnection();
-			SqlCommand cmd = new SqlCommand(sql, conn);
-			for (int i = 0; i < parameters.Length; i += 1) {
-				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
+		public static (SqlConnection,SqlCommand) Prepare(string sql,params object[] args) {
+			var conn = new SqlConnection(ConnectionString);
+			var cmd = new SqlCommand(sql, conn);
+			for (int i = 0; i < args.Length; i += 1) {
+				cmd.Parameters.AddWithValue("@" + i, args[i]);
 			}
+			return (conn, cmd);
+		}
+		public static int ExecuteUpdate(string sql,params object[] args) {
+			var pair = Prepare(sql, args);
+			var conn = pair.Item1;
+			var cmd = pair.Item2;
 
 			try {
 				conn.Open();
@@ -30,12 +29,10 @@ namespace library_2121 {
 			}
 		}
 
-		public static object ExecuteScalar(string sql, params object[] parameters) {
-			SqlConnection conn = GetConnection();
-			SqlCommand cmd = new SqlCommand(sql, conn);
-			for (int i = 0; i < parameters.Length; i += 1) {
-				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
-			}
+		public static object ExecuteScalar(string sql, params object[] args) {
+			var pair = Prepare(sql, args);
+			var conn = pair.Item1;
+			var cmd = pair.Item2;
 
 			try {
 				conn.Open();
@@ -45,12 +42,10 @@ namespace library_2121 {
 			}
 		}
 
-		public static IEnumerable<SqlDataReader> ExecuteReader(string sql, params object[] parameters) {
-			SqlConnection conn = GetConnection();
-			SqlCommand cmd = new SqlCommand(sql, conn);
-			for (int i = 0; i < parameters.Length; i += 1) {
-				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
-			}
+		public static IEnumerable<SqlDataReader> ExecuteReader(string sql, params object[] args) {
+			var pair = Prepare(sql, args);
+			var conn = pair.Item1;
+			var cmd = pair.Item2;
 
 			SqlDataReader reader = null;
 			try {
@@ -65,12 +60,10 @@ namespace library_2121 {
 			}
 		}
 
-		public static DataTable ExecuteQuery(string sql, params object[] parameters) {
-			SqlConnection conn = GetConnection();
-			SqlCommand cmd = new SqlCommand(sql, conn);
-			for (int i = 0; i < parameters.Length; i += 1) {
-				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
-			}
+		public static DataTable ExecuteQuery(string sql, params object[] args) {
+			var pair = Prepare(sql, args);
+			var conn = pair.Item1;
+			var cmd = pair.Item2;
 
 			try {
 				DataTable dt = new DataTable();
