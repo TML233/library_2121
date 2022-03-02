@@ -12,9 +12,7 @@ namespace library_2121 {
 	public class Utils {
 		public static string ConnectionString => ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
 
-		public static SqlConnection GetConnection() {
-			return new SqlConnection(ConnectionString);
-		}
+		public static SqlConnection GetConnection() => new SqlConnection(ConnectionString);
 
 		public static int ExecuteUpdate(string sql,params object[] parameters) {
 			SqlConnection conn = GetConnection();
@@ -53,20 +51,38 @@ namespace library_2121 {
 			}
 		}
 
-		public static DataSet ExecuteQuery(string sql,string table, params (string name, object value)[] parameters) {
+		public static SqlDataReader ExecuteReader(string sql, params object[] parameters) {
 			SqlConnection conn = GetConnection();
+			SqlCommand cmd = new SqlCommand(sql, conn);
+			for (int i = 0; i < parameters.Length; i += 1) {
+				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
+			}
 
 			try {
-				SqlCommand cmd = new SqlCommand(sql, conn);
-				foreach (var v in parameters) {
-					cmd.Parameters.AddWithValue(v.name, v.value);
-				}
+				conn.Open();
+				var reader = cmd.ExecuteReader();
+				return reader;
+			} catch (Exception e) {
+				MessageBox.Show(e.ToString());
+				return null;
+			} finally {
+				conn.Close();
+			}
+		}
 
-				DataSet ds = new DataSet();
+		public static DataTable ExecuteQuery(string sql, params object[] parameters) {
+			SqlConnection conn = GetConnection();
+			SqlCommand cmd = new SqlCommand(sql, conn);
+			for (int i = 0; i < parameters.Length; i += 1) {
+				cmd.Parameters.AddWithValue("@" + i, parameters[i]);
+			}
+
+			try {
+				DataTable dt = new DataTable();
 				SqlDataAdapter adp = new SqlDataAdapter(cmd);
 
-				adp.Fill(ds, table);
-				return ds;
+				adp.Fill(dt);
+				return dt;
 			} finally {
 				conn.Close();
 			}

@@ -20,8 +20,7 @@ namespace library_2121 {
 		}
 
 		void RefreshData(string card) {
-			var set = Utils.ExecuteQuery("SELECT * FROM borrow WHERE 借书证号=@Card AND 还书时间 IS NULL", "data", ("@Card", card));
-			data.DataSource = set.Tables["data"].DefaultView;
+			data.DataSource = Utils.ExecuteQuery("SELECT * FROM borrow WHERE 借书证号=@0 AND 还书时间 IS NULL", "data", card).DefaultView;
 		}
 		private void inputCard_TextChanged(object sender, EventArgs e) {
 			RefreshData(inputCard.Text);
@@ -94,6 +93,12 @@ namespace library_2121 {
 				conn?.Close();
 			}
 			RefreshData(inputCard.Text);
+		}
+
+		private void BorrowPage_Load(object sender, EventArgs e) {
+			var conn = Utils.GetConnection();
+			conn.Open();
+			
 		}
 	}
 }

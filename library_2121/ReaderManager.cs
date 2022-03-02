@@ -21,8 +21,7 @@ namespace library_2121 {
 		void RefreshData()
 		{
 			string sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
-			var set = Utils.ExecuteQuery(sql, "reader");
-			dataReader.DataSource = set.Tables["reader"].DefaultView;
+			dataReader.DataSource = Utils.ExecuteQuery(sql).DefaultView;
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
@@ -31,14 +30,13 @@ namespace library_2121 {
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
 				sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
 			}else if (radioId.Checked) {
-				sql = "SELECT * FROM reader WHERE 借书证号=@Param ORDER BY 登记日期 DESC";
+				sql = "SELECT * FROM reader WHERE 借书证号=@0 ORDER BY 登记日期 DESC";
 			}else if (radioName.Checked) {
-				sql = "SELECT * FROM reader WHERE 姓名 LIKE @Param ORDER BY 登记日期 DESC";
+				sql = "SELECT * FROM reader WHERE 姓名 LIKE @0 ORDER BY 登记日期 DESC";
 				param = string.Format("%{0}%", textBox.Text);
 			}
 			
-			var set=Utils.ExecuteQuery(sql, "reader", ("@Param", param));
-			dataReader.DataSource = set.Tables["reader"].DefaultView;
+			dataReader.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {

@@ -21,8 +21,7 @@ namespace library_2121 {
 
 		void RefreshData() {
 			string sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
-			var set = Utils.ExecuteQuery(sql, "book");
-			dataBook.DataSource = set.Tables["book"].DefaultView;
+			dataBook.DataSource = Utils.ExecuteQuery(sql).DefaultView;
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
@@ -31,20 +30,19 @@ namespace library_2121 {
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
 				sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
 			} else if (radioId.Checked) {
-				sql = "SELECT * FROM book WHERE 图书编号=@Param ORDER BY 入库日期 DESC";
+				sql = "SELECT * FROM book WHERE 图书编号=@0 ORDER BY 入库日期 DESC";
 			} else if (radioType.Checked) {
-				sql = "SELECT * FROM book WHERE 分类=@Param ORDER BY 入库日期 DESC";
+				sql = "SELECT * FROM book WHERE 分类=@0 ORDER BY 入库日期 DESC";
 			} else if (radioName.Checked) {
-				sql = "SELECT * FROM book WHERE 书名 LIKE @Param ORDER BY 入库日期 DESC";
+				sql = "SELECT * FROM book WHERE 书名 LIKE @0 ORDER BY 入库日期 DESC";
 				param = string.Format("%{0}%", textBox.Text);
 			} else if (radioAuthor.Checked) {
-				sql = "SELECT * FROM book WHERE 作者=@Param ORDER BY 入库日期 DESC";
+				sql = "SELECT * FROM book WHERE 作者=@0 ORDER BY 入库日期 DESC";
 			} else if (radioPublisher.Checked) {
-				sql = "SELECT * FROM book WHERE 出版社=@Param ORDER BY 入库日期 DESC";
+				sql = "SELECT * FROM book WHERE 出版社=@0 ORDER BY 入库日期 DESC";
 			}
 
-			var set = Utils.ExecuteQuery(sql, "book", ("@Param", param));
-			dataBook.DataSource = set.Tables["book"].DefaultView;
+			dataBook.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {

@@ -21,8 +21,7 @@ namespace library_2121 {
 
 		void RefreshData() {
 			string sql = "SELECT * FROM open1 ORDER BY 创建时间 DESC";
-			var set = Utils.ExecuteQuery(sql, "user");
-			dataUser.DataSource = set.Tables["user"].DefaultView;
+			dataUser.DataSource = Utils.ExecuteQuery(sql).DefaultView;
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
@@ -37,8 +36,7 @@ namespace library_2121 {
 				sql = "SELECT * FROM open1 WHERE 用户名={0} ORDER BY 创建时间 DESC";
 			}
 			
-			var set=Utils.ExecuteQuery(sql, "user", ("@Param", param));
-			dataUser.DataSource = set.Tables["user"].DefaultView;
+			dataUser.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {

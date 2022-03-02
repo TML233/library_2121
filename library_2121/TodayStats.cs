@@ -46,10 +46,10 @@ namespace library_2121 {
 			}
 			lblTitle.Text = string.Format("今日{0}", title);
 
-			var set = Utils.ExecuteQuery(sql, "today");
-			data.DataSource = set.Tables["today"].DefaultView;
+			var table = Utils.ExecuteQuery(sql);
+			data.DataSource = table.DefaultView;
 
-			labelTotal.Text = string.Format("今日{0}共 {1} 本", title, set.Tables["today"].DefaultView.Count);
+			labelTotal.Text = string.Format("今日{0}共 {1} 本", title, table.DefaultView.Count);
 		}
 
 		private void button1_Click(object sender, EventArgs e) {

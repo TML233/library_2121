@@ -28,25 +28,24 @@ namespace library_2121 {
 			if (!radioDate.Checked && string.IsNullOrWhiteSpace(textBox.Text)) {
 				sql = "SELECT * FROM borrow WHERE {0} ORDER BY {1} DESC";
 			} else if (radioId.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 图书编号=@Param ORDER BY {1} DESC";
+				sql = "SELECT * FROM borrow WHERE {0} AND 图书编号=@0 ORDER BY {1} DESC";
 			} else if (radioCard.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 借书证号=@Param ORDER BY {1} DESC";
+				sql = "SELECT * FROM borrow WHERE {0} AND 借书证号=@0 ORDER BY {1} DESC";
 			} else if (radioBookName.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 书名 LIKE @Param ORDER BY {1} DESC";
+				sql = "SELECT * FROM borrow WHERE {0} AND 书名 LIKE @0 ORDER BY {1} DESC";
 				param = string.Format("%{0}%", textBox.Text);
 			} else if (radioCardName.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 姓名=@Param ORDER BY {1} DESC";
+				sql = "SELECT * FROM borrow WHERE {0} AND 姓名=@0 ORDER BY {1} DESC";
 			} else if (radioDate.Checked) {
 				if (borrow) {
-					sql = "SELECT * FROM borrow WHERE {0} AND 借书日期=@Param ORDER BY {1} DESC";
+					sql = "SELECT * FROM borrow WHERE {0} AND 借书日期=@0 ORDER BY {1} DESC";
 				} else {
-					sql = "SELECT * FROM borrow WHERE {0} AND 还书日期=@Param ORDER BY {1} DESC";
+					sql = "SELECT * FROM borrow WHERE {0} AND 还书日期=@0 ORDER BY {1} DESC";
 				}
 			}
 
 			string finalSql = string.Format(sql, limit, orderby);
-			var set=Utils.ExecuteQuery(finalSql, "book", ("@Param", !radioDate.Checked?param:date));
-			dataBook.DataSource = set.Tables["book"].DefaultView;
+			dataBook.DataSource = Utils.ExecuteQuery(finalSql, !radioDate.Checked ? param : date).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {

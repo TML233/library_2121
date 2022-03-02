@@ -64,9 +64,7 @@ namespace library_2121 {
 					MessageBox.Show("添加失败！");
 				}
 			}
-			string sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
-			var set = Utils.ExecuteQuery(sql, "reader");
-			reader.dataReader.DataSource = set.Tables["reader"].DefaultView;
+			reader.dataReader.DataSource = Utils.ExecuteQuery("SELECT * FROM reader ORDER BY 登记日期 DESC").DefaultView;
 			Close();
 		}
 	}

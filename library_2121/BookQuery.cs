@@ -50,8 +50,7 @@ namespace library_2121 {
 
 			
 			
-			var set=Utils.ExecuteQuery(sb.ToString(), "book");
-			dataBook.DataSource = set.Tables["book"].DefaultView;
+			dataBook.DataSource = Utils.ExecuteQuery(sb.ToString()).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {
