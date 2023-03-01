@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using library_2121.Data;
 
 namespace library_2121 {
 	public partial class BookManager : Form {
@@ -20,29 +21,52 @@ namespace library_2121 {
 		}
 
 		void RefreshData() {
-			string sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
-			dataBook.DataSource = Utils.ExecuteQuery(sql).DefaultView;
+			Entities db = new Entities();
+			dataBook.DataSource = (from o in db.book
+								   orderby o.rkrq descending
+								   select o).ToList();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
-			string sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
+			Entities db = new Entities();
+			object dt;
 			string param = textBox.Text;
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
-				sql = "SELECT * FROM book ORDER BY 入库日期 DESC";
+				dt = (from o in db.book
+					 orderby o.rkrq descending
+					 select o).ToList();
 			} else if (radioId.Checked) {
-				sql = "SELECT * FROM book WHERE 图书编号=@0 ORDER BY 入库日期 DESC";
+				dt= (from o in db.book
+					where o.tsbh==param
+					orderby o.rkrq descending
+					select o).ToList();
 			} else if (radioType.Checked) {
-				sql = "SELECT * FROM book WHERE 分类=@0 ORDER BY 入库日期 DESC";
+				dt = (from o in db.book
+					 where o.fenlei == param
+					 orderby o.rkrq descending
+					 select o).ToList();
 			} else if (radioName.Checked) {
-				sql = "SELECT * FROM book WHERE 书名 LIKE @0 ORDER BY 入库日期 DESC";
-				param = string.Format("%{0}%", textBox.Text);
+				dt = (from o in db.book
+					 where o.shuming.Contains(param)
+					 orderby o.rkrq descending
+					 select o).ToList();
 			} else if (radioAuthor.Checked) {
-				sql = "SELECT * FROM book WHERE 作者=@0 ORDER BY 入库日期 DESC";
+				dt = (from o in db.book
+					 where o.zuozhe == param
+					 orderby o.rkrq descending
+					 select o).ToList();
 			} else if (radioPublisher.Checked) {
-				sql = "SELECT * FROM book WHERE 出版社=@0 ORDER BY 入库日期 DESC";
+				dt = (from o in db.book
+					 where o.chubanhse == param
+					 orderby o.rkrq descending
+					 select o).ToList();
+			} else {
+				dt = (from o in db.book
+					 orderby o.rkrq descending
+					 select o).ToList();
 			}
 
-			dataBook.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
+			dataBook.DataSource = dt;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {
@@ -55,13 +79,20 @@ namespace library_2121 {
 			}
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataBook.CurrentRow;
-				string intId = Convert.ToString(dgvr.Cells["图书编号"].Value);
-				if (Utils.ExecuteUpdate("Delete From book Where 图书编号 = @0", intId) > 0) {
-					dataBook.Rows.Remove(dgvr);
-					MessageBox.Show("删除成功！", "软件提示");
-				} else {
+				string intId = Convert.ToString(dgvr.Cells["tsbh"].Value);
+				Entities db = new Entities();
+				book book = (from o in db.book
+							 where o.tsbh == intId
+							 select o).FirstOrDefault();
+				if (book == null) {
 					MessageBox.Show("删除失败！", "软件提示");
+					return;
 				}
+
+				db.book.Remove(book);
+				db.SaveChanges();
+				dataBook.Rows.Remove(dgvr);
+				MessageBox.Show("删除成功！", "软件提示");
 			}
 		}
 
