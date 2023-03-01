@@ -1,4 +1,5 @@
-﻿using System;
+﻿using library_2121.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,17 +23,17 @@ namespace library_2121 {
 			book = (BookManager)Owner;
 			if (editMode) {
 				inputId.ReadOnly = true;
-				inputId.Text = book.dataBook.CurrentRow.Cells["图书编号"].Value.ToString();
-				inputCategory.Text = book.dataBook.CurrentRow.Cells["分类"].Value.ToString();
-				inputName.Text = book.dataBook.CurrentRow.Cells["书名"].Value.ToString();
-				inputAuthor.Text = book.dataBook.CurrentRow.Cells["作者"].Value.ToString();
-				inputPublisher.Text = book.dataBook.CurrentRow.Cells["出版社"].Value.ToString();
-				datePublish.Text = book.dataBook.CurrentRow.Cells["出版日期"].Value.ToString();
-				inputPrice.Text = book.dataBook.CurrentRow.Cells["定价"].Value.ToString();
-				dateEnter.Text = book.dataBook.CurrentRow.Cells["入库日期"].Value.ToString();
-				inputStatus.Text = book.dataBook.CurrentRow.Cells["状态"].Value.ToString();
-				comboPosition.Text = book.dataBook.CurrentRow.Cells["所放位置"].Value.ToString();
-				inputComment.Text = book.dataBook.CurrentRow.Cells["备注"].Value.ToString();
+				inputId.Text = book.dataBook.CurrentRow.Cells["tsbh"].Value.ToString();
+				inputCategory.Text = book.dataBook.CurrentRow.Cells["fenlei"].Value.ToString();
+				inputName.Text = book.dataBook.CurrentRow.Cells["shuming"].Value.ToString();
+				inputAuthor.Text = book.dataBook.CurrentRow.Cells["zuozhe"].Value.ToString();
+				inputPublisher.Text = book.dataBook.CurrentRow.Cells["chubanhse"].Value.ToString();
+				datePublish.Text = book.dataBook.CurrentRow.Cells["chubanriqi"].Value.ToString();
+				inputPrice.Text = book.dataBook.CurrentRow.Cells["dingjia"].Value.ToString();
+				dateEnter.Text = book.dataBook.CurrentRow.Cells["rkrq"].Value.ToString();
+				inputStatus.Text = book.dataBook.CurrentRow.Cells["zt"].Value.ToString();
+				comboPosition.Text = book.dataBook.CurrentRow.Cells["sfwz"].Value.ToString();
+				inputComment.Text = book.dataBook.CurrentRow.Cells["beizhu"].Value.ToString();
 			}
 		}
 
@@ -41,22 +42,44 @@ namespace library_2121 {
 		}
 
 		private void btnNext_Click(object sender, EventArgs e) {
+			Entities db = new Entities();
 			if (editMode) {
-				int edited = Utils.ExecuteUpdate(
-					"update book set 分类=@0,书名=@1,作者=@2,出版社=@3,出版日期=@4,定价=@5,入库日期=@6,状态=@7,所放位置=@8,备注=@9 where 图书编号=@10",
-					inputCategory.Text, inputName.Text, inputAuthor.Text, inputPublisher.Text, datePublish.Value.Date, inputPrice.Text, dateEnter.Text,
-					inputStatus.Text, comboPosition.Text, inputComment.Text, inputId.Text
-				);
-				if (edited > 0) {
-					MessageBox.Show("修改成功！");
-				} else {
+				var book = (from o in db.book
+							where o.tsbh == inputId.Text
+							select o).FirstOrDefault();
+				if (book == null) {
 					MessageBox.Show("修改失败！");
-				}
-			} else {
-				int edited=Utils.ExecuteUpdate("insert into book(图书编号,分类,书名,作者,出版社,出版日期,定价,入库日期,状态,所放位置,备注)  Values('" + inputId.Text + "','" + inputCategory.Text + "','" + inputName.Text + "','" + inputAuthor.Text + "','" + inputPublisher.Text + "','" + datePublish.Value.Date + "'," + inputPrice.Text + ",'" + dateEnter.Text + "','" + inputStatus.Text + "','" + comboPosition.Text + "','" + inputComment.Text + "')");
-				if (edited > 0) {
-					MessageBox.Show("添加成功！");
 				} else {
+					book.fenlei = inputCategory.Text;
+					book.shuming = inputName.Text;
+					book.zuozhe = inputAuthor.Text;
+					book.chubanhse = inputPublisher.Text;
+					book.chubanriqi = datePublish.Value.Date;
+					book.dingjia = double.Parse(inputPrice.Text);
+					book.zt = inputStatus.Text;
+					book.sfwz = comboPosition.Text;
+					book.beizhu = inputComment.Text;
+				}
+				db.SaveChanges();
+				MessageBox.Show("修改成功！");
+			} else {
+				var book = new book {
+					tsbh = inputId.Text,
+					fenlei = inputCategory.Text,
+					shuming = inputName.Text,
+					zuozhe = inputAuthor.Text,
+					chubanhse = inputPublisher.Text,
+					chubanriqi = datePublish.Value.Date,
+					dingjia = double.Parse(inputPrice.Text),
+					zt = inputStatus.Text,
+					sfwz = comboPosition.Text,
+					beizhu = inputComment.Text
+				};
+				db.book.Add(book);
+				try {
+					db.SaveChanges();
+					MessageBox.Show("添加成功！");
+				} catch {
 					MessageBox.Show("添加失败！");
 				}
 			}
