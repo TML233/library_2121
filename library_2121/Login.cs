@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
+using library_2121.Data;
 
 namespace library_2121
 {
@@ -58,15 +59,19 @@ namespace library_2121
 				return;
 			}
 
+
+			Entities db = new Entities();
+			var uu = (from o in db.open1
+					  where o.user_name == user
+					  where o.password == password
+					  select o).FirstOrDefault();
 			int result = 0;
-			foreach (var reader in Utils.ExecuteReader("SELECT * FROM open1 WHERE 用户名=@0 AND 口令=@1", user, password)) {
-				if (radioUser.Checked && reader["级别"].ToString().Trim() == "a") {
+			if (uu != null) {
+				if (radioUser.Checked && uu.jibie.Trim() == "a") {
 					result = 1;
-					break;
 				}
-				if (radioAdmin.Checked && reader["级别"].ToString().Trim() == "b") {
+				if (radioAdmin.Checked && uu.jibie.Trim() == "b") {
 					result = 2;
-					break;
 				}
 			}
 
