@@ -33,9 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +79,36 @@
     </Compile>
     <Compile Include="BookQuery.Designer.cs">
       <DependentUpon>BookQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\book.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\borrow.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Library.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Library.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Library.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Library.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\open1.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\reader.cs">
+      <DependentUpon>Library.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\yuyue.cs">
+      <DependentUpon>Library.tt</DependentUpon>
     </Compile>
     <Compile Include="ReaderInfo.cs">
       <SubType>Form</SubType>
@@ -194,6 +233,14 @@
     <EmbeddedResource Include="UserMenu.resx">
       <DependentUpon>UserMenu.cs</DependentUpon>
     </EmbeddedResource>
+    <EntityDeploy Include="Data\Library.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Library.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Data\Library.edmx.diagram">
+      <DependentUpon>Library.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -206,6 +253,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Library.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Library.edmx</DependentUpon>
+      <LastGenOutput>Library.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Data\Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Library.edmx</DependentUpon>
+      <LastGenOutput>Library.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

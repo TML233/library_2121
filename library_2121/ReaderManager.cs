@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using library_2121.Data;
 
 namespace library_2121 {
 	public partial class ReaderManager : Form {
@@ -20,23 +21,34 @@ namespace library_2121 {
 		}
 		void RefreshData()
 		{
-			string sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
-			dataReader.DataSource = Utils.ExecuteQuery(sql).DefaultView;
+			Entities db = new Entities();
+			dataReader.DataSource = (from o in db.reader
+									 orderby o.djrq descending
+									 select o).ToList();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
-			string sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
+			Entities db = new Entities();
 			string param = textBox.Text;
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
-				sql = "SELECT * FROM reader ORDER BY 登记日期 DESC";
+				dataReader.DataSource = (from o in db.reader
+										 orderby o.djrq descending
+										 select o).ToList();
 			}else if (radioId.Checked) {
-				sql = "SELECT * FROM reader WHERE 借书证号=@0 ORDER BY 登记日期 DESC";
-			}else if (radioName.Checked) {
-				sql = "SELECT * FROM reader WHERE 姓名 LIKE @0 ORDER BY 登记日期 DESC";
-				param = string.Format("%{0}%", textBox.Text);
+				dataReader.DataSource = (from o in db.reader
+										 where o.jszh==param
+										 orderby o.djrq descending
+										 select o).ToList();
+			} else if (radioName.Checked) {
+				dataReader.DataSource = (from o in db.reader
+										 where o.name.Contains(param)
+										 orderby o.djrq descending
+										 select o).ToList();
+			} else {
+				dataReader.DataSource = (from o in db.reader
+										 orderby o.djrq descending
+										 select o).ToList();
 			}
-			
-			dataReader.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {
@@ -49,13 +61,19 @@ namespace library_2121 {
 			}
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataReader.CurrentRow;
-				string intId = Convert.ToString(dgvr.Cells["借书证号"].Value);
-				if (Utils.ExecuteUpdate("Delete From reader Where 借书证号 = @0", intId) > 0) {
-					dataReader.Rows.Remove(dgvr);
-					MessageBox.Show("删除成功！", "软件提示");
-				} else {
+				string intId = Convert.ToString(dgvr.Cells["jszh"].Value);
+				Entities db = new Entities();
+				reader reader = (from o in db.reader
+								 where o.jszh == intId
+								 select o).FirstOrDefault();
+				if (reader == null) {
 					MessageBox.Show("删除失败！", "软件提示");
+					return;
 				}
+				db.reader.Remove(reader);
+				db.SaveChanges();
+				dataReader.Rows.Remove(dgvr);
+				MessageBox.Show("删除成功！", "软件提示");
 			}
 		}
 

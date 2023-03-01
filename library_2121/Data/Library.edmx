@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="book">
+          <Key>
+            <PropertyRef Name="tsbh" />
+          </Key>
+          <Property Name="tsbh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="fenlei" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="shuming" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="zuozhe" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="chubanhse" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="chubanriqi" Type="datetime" Nullable="false" />
+          <Property Name="dingjia" Type="float" Nullable="false" />
+          <Property Name="rkrq" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="zt" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="sfwz" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="beizhu" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="borrow">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tsbh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="shuming" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="jszh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="jsrq" Type="datetime" Nullable="false" />
+          <Property Name="hsrq" Type="datetime" />
+          <Property Name="zt" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="fkje" Type="float" Nullable="false" />
+          <Property Name="hssj" Type="datetime" />
+        </EntityType>
+        <EntityType Name="open1">
+          <Key>
+            <PropertyRef Name="user_name" />
+          </Key>
+          <Property Name="user_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="jibie" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="card" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="50" />
+          <Property Name="phone" Type="varchar" MaxLength="50" />
+          <Property Name="cjsj" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="reader">
+          <Key>
+            <PropertyRef Name="jszh" />
+          </Key>
+          <Property Name="jszh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="sex" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="danwei" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="jibie" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="yjss" Type="int" Nullable="false" />
+          <Property Name="djrq" Type="datetime" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="guashi" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="gqfk" Type="int" Nullable="false" />
+          <Property Name="jieshuzongshu" Type="int" Nullable="false" />
+          <Property Name="jsts" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="yuyue">
+          <Key>
+            <PropertyRef Name="tsbh" />
+          </Key>
+          <Property Name="jszh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="tsbh" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="shuming" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="yuyueriqi" Type="datetime" Nullable="false" />
+          <Property Name="yxsx" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_borrow_book">
+          <End Role="book" Type="Self.book" Multiplicity="1" />
+          <End Role="borrow" Type="Self.borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="tsbh" />
+            </Principal>
+            <Dependent Role="borrow">
+              <PropertyRef Name="tsbh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_reader">
+          <End Role="reader" Type="Self.reader" Multiplicity="1" />
+          <End Role="borrow" Type="Self.borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="reader">
+              <PropertyRef Name="jszh" />
+            </Principal>
+            <Dependent Role="borrow">
+              <PropertyRef Name="jszh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_yuyue_book">
+          <End Role="book" Type="Self.book" Multiplicity="1" />
+          <End Role="yuyue" Type="Self.yuyue" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="tsbh" />
+            </Principal>
+            <Dependent Role="yuyue">
+              <PropertyRef Name="tsbh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="book" EntityType="Self.book" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="borrow" EntityType="Self.borrow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="open1" EntityType="Self.open1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="reader" EntityType="Self.reader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="yuyue" EntityType="Self.yuyue" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_borrow_book" Association="Self.FK_borrow_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="borrow" EntitySet="borrow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_reader" Association="Self.FK_borrow_reader">
+            <End Role="reader" EntitySet="reader" />
+            <End Role="borrow" EntitySet="borrow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_yuyue_book" Association="Self.FK_yuyue_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="yuyue" EntitySet="yuyue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="book">
+          <Key>
+            <PropertyRef Name="tsbh" />
+          </Key>
+          <Property Name="tsbh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fenlei" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="shuming" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="zuozhe" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chubanhse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="chubanriqi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dingjia" Type="Double" Nullable="false" />
+          <Property Name="rkrq" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="zt" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sfwz" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="beizhu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="borrow" Relationship="Self.FK_borrow_book" FromRole="book" ToRole="borrow" />
+          <NavigationProperty Name="yuyue" Relationship="Self.FK_yuyue_book" FromRole="book" ToRole="yuyue" />
+        </EntityType>
+        <EntityType Name="borrow">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tsbh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="shuming" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="jszh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="jsrq" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="hsrq" Type="DateTime" Precision="3" />
+          <Property Name="zt" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fkje" Type="Double" Nullable="false" />
+          <Property Name="hssj" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="book" Relationship="Self.FK_borrow_book" FromRole="borrow" ToRole="book" />
+          <NavigationProperty Name="reader" Relationship="Self.FK_borrow_reader" FromRole="borrow" ToRole="reader" />
+        </EntityType>
+        <EntityType Name="open1">
+          <Key>
+            <PropertyRef Name="user_name" />
+          </Key>
+          <Property Name="user_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="jibie" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="card" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cjsj" Type="DateTime" Precision="7" />
+        </EntityType>
+        <EntityType Name="reader">
+          <Key>
+            <PropertyRef Name="jszh" />
+          </Key>
+          <Property Name="jszh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sex" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="danwei" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="jibie" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="yjss" Type="Int32" Nullable="false" />
+          <Property Name="djrq" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="guashi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="gqfk" Type="Int32" Nullable="false" />
+          <Property Name="jieshuzongshu" Type="Int32" Nullable="false" />
+          <Property Name="jsts" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="borrow" Relationship="Self.FK_borrow_reader" FromRole="reader" ToRole="borrow" />
+        </EntityType>
+        <EntityType Name="yuyue">
+          <Key>
+            <PropertyRef Name="tsbh" />
+          </Key>
+          <Property Name="jszh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tsbh" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="shuming" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="yuyueriqi" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="yxsx" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="book" Relationship="Self.FK_yuyue_book" FromRole="yuyue" ToRole="book" />
+        </EntityType>
+        <Association Name="FK_borrow_book">
+          <End Role="book" Type="Self.book" Multiplicity="1" />
+          <End Role="borrow" Type="Self.borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="tsbh" />
+            </Principal>
+            <Dependent Role="borrow">
+              <PropertyRef Name="tsbh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_yuyue_book">
+          <End Role="book" Type="Self.book" Multiplicity="1" />
+          <End Role="yuyue" Type="Self.yuyue" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="book">
+              <PropertyRef Name="tsbh" />
+            </Principal>
+            <Dependent Role="yuyue">
+              <PropertyRef Name="tsbh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_borrow_reader">
+          <End Role="reader" Type="Self.reader" Multiplicity="1" />
+          <End Role="borrow" Type="Self.borrow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="reader">
+              <PropertyRef Name="jszh" />
+            </Principal>
+            <Dependent Role="borrow">
+              <PropertyRef Name="jszh" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="book" EntityType="Self.book" />
+          <EntitySet Name="borrow" EntityType="Self.borrow" />
+          <EntitySet Name="open1" EntityType="Self.open1" />
+          <EntitySet Name="reader" EntityType="Self.reader" />
+          <EntitySet Name="yuyue" EntityType="Self.yuyue" />
+          <AssociationSet Name="FK_borrow_book" Association="Self.FK_borrow_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="borrow" EntitySet="borrow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_yuyue_book" Association="Self.FK_yuyue_book">
+            <End Role="book" EntitySet="book" />
+            <End Role="yuyue" EntitySet="yuyue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_borrow_reader" Association="Self.FK_borrow_reader">
+            <End Role="reader" EntitySet="reader" />
+            <End Role="borrow" EntitySet="borrow" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="book">
+            <EntityTypeMapping TypeName="Model.book">
+              <MappingFragment StoreEntitySet="book">
+                <ScalarProperty Name="tsbh" ColumnName="tsbh" />
+                <ScalarProperty Name="fenlei" ColumnName="fenlei" />
+                <ScalarProperty Name="shuming" ColumnName="shuming" />
+                <ScalarProperty Name="zuozhe" ColumnName="zuozhe" />
+                <ScalarProperty Name="chubanhse" ColumnName="chubanhse" />
+                <ScalarProperty Name="chubanriqi" ColumnName="chubanriqi" />
+                <ScalarProperty Name="dingjia" ColumnName="dingjia" />
+                <ScalarProperty Name="rkrq" ColumnName="rkrq" />
+                <ScalarProperty Name="zt" ColumnName="zt" />
+                <ScalarProperty Name="sfwz" ColumnName="sfwz" />
+                <ScalarProperty Name="beizhu" ColumnName="beizhu" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="borrow">
+            <EntityTypeMapping TypeName="Model.borrow">
+              <MappingFragment StoreEntitySet="borrow">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="tsbh" ColumnName="tsbh" />
+                <ScalarProperty Name="shuming" ColumnName="shuming" />
+                <ScalarProperty Name="jszh" ColumnName="jszh" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="jsrq" ColumnName="jsrq" />
+                <ScalarProperty Name="hsrq" ColumnName="hsrq" />
+                <ScalarProperty Name="zt" ColumnName="zt" />
+                <ScalarProperty Name="fkje" ColumnName="fkje" />
+                <ScalarProperty Name="hssj" ColumnName="hssj" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="open1">
+            <EntityTypeMapping TypeName="Model.open1">
+              <MappingFragment StoreEntitySet="open1">
+                <ScalarProperty Name="user_name" ColumnName="user_name" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="jibie" ColumnName="jibie" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="card" ColumnName="card" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="cjsj" ColumnName="cjsj" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="reader">
+            <EntityTypeMapping TypeName="Model.reader">
+              <MappingFragment StoreEntitySet="reader">
+                <ScalarProperty Name="jszh" ColumnName="jszh" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="sex" ColumnName="sex" />
+                <ScalarProperty Name="danwei" ColumnName="danwei" />
+                <ScalarProperty Name="jibie" ColumnName="jibie" />
+                <ScalarProperty Name="yjss" ColumnName="yjss" />
+                <ScalarProperty Name="djrq" ColumnName="djrq" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="guashi" ColumnName="guashi" />
+                <ScalarProperty Name="gqfk" ColumnName="gqfk" />
+                <ScalarProperty Name="jieshuzongshu" ColumnName="jieshuzongshu" />
+                <ScalarProperty Name="jsts" ColumnName="jsts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="yuyue">
+            <EntityTypeMapping TypeName="Model.yuyue">
+              <MappingFragment StoreEntitySet="yuyue">
+                <ScalarProperty Name="jszh" ColumnName="jszh" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="tsbh" ColumnName="tsbh" />
+                <ScalarProperty Name="shuming" ColumnName="shuming" />
+                <ScalarProperty Name="yuyueriqi" ColumnName="yuyueriqi" />
+                <ScalarProperty Name="yxsx" ColumnName="yxsx" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
