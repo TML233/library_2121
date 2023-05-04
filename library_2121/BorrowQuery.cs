@@ -8,44 +8,86 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using library_2121.Data;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace library_2121 {
 	public partial class BorrowQuery : Form {
 		public bool borrow = false;
-		string orderby = "";
-		string limit = "";
 		public BorrowQuery(bool borrow) {
 			this.borrow = borrow;
-			orderby = borrow ? "借书日期" : "还书日期";
-			limit = borrow ? "还书时间 IS NULL" : "还书时间 IS NOT NULL";
 			InitializeComponent();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
-			string sql = "SELECT * FROM borrow ORDER BY {1} DESC";
 			string param = textBox.Text;
-			string date = inputDate.Text;
-			if (!radioDate.Checked && string.IsNullOrWhiteSpace(textBox.Text)) {
-				sql = "SELECT * FROM borrow WHERE {0} ORDER BY {1} DESC";
-			} else if (radioId.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 图书编号=@0 ORDER BY {1} DESC";
-			} else if (radioCard.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 借书证号=@0 ORDER BY {1} DESC";
-			} else if (radioBookName.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 书名 LIKE @0 ORDER BY {1} DESC";
-				param = string.Format("%{0}%", textBox.Text);
-			} else if (radioCardName.Checked) {
-				sql = "SELECT * FROM borrow WHERE {0} AND 姓名=@0 ORDER BY {1} DESC";
-			} else if (radioDate.Checked) {
+			var date = inputDate.Value.Date;
+			object table = null;
+			int count = 0;
+			Entities db = new Entities();
+			if (!radioDate.Checked) {
+				if (string.IsNullOrWhiteSpace(textBox.Text)) {
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID,o.tsbh,o.shuming,o.jszh,o.name,o.jsrq,o.hsrq,o.zt,o.fkje,o.hssj}).ToList();
+					count = l.Count;
+					table = l;
+				} else if (radioId.Checked) {
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.tsbh == param
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
+				} else if (radioCard.Checked) {
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.jszh == param
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
+				} else if (radioBookName.Checked) {
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.shuming.Contains(param)
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
+				} else if (radioCardName.Checked) {
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.name == param
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
+				}
+			} else {
 				if (borrow) {
-					sql = "SELECT * FROM borrow WHERE {0} AND 借书日期=@0 ORDER BY {1} DESC";
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.hssj == date
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
 				} else {
-					sql = "SELECT * FROM borrow WHERE {0} AND 还书日期=@0 ORDER BY {1} DESC";
+					var l = (from o in db.borrow
+							 where borrow ? o.hssj == null : o.hssj != null
+							 where o.hssj == date
+							 orderby borrow ? o.jsrq : o.hsrq descending
+							 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+					count = l.Count;
+					table = l;
 				}
 			}
 
-			string finalSql = string.Format(sql, limit, orderby);
-			dataBook.DataSource = Utils.ExecuteQuery(finalSql, !radioDate.Checked ? param : date).DefaultView;
+			dataBook.DataSource = table;
+			lblCount.Text = $"共 {count} 个结果。";
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {
@@ -79,6 +121,16 @@ namespace library_2121 {
 
 		private void BorrowQuery_Load(object sender, EventArgs e) {
 			lblTitle.Text = borrow ? "借书查询" : "还书查询";
+
+			Entities db = new Entities();
+			var l = (from o in db.borrow
+					 where borrow ? o.hssj == null : o.hssj != null
+					 orderby borrow ? o.jsrq : o.hsrq descending
+					 select new { o.ID, o.tsbh, o.shuming, o.jszh, o.name, o.jsrq, o.hsrq, o.zt, o.fkje, o.hssj }).ToList();
+			var count = l.Count;
+			var table = l;
+			dataBook.DataSource = table;
+			lblCount.Text = $"共 {count} 个结果。";
 		}
 	}
 }

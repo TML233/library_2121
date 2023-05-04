@@ -36,6 +36,7 @@ namespace library_2121 {
 			this.btnQuit = new System.Windows.Forms.Button();
 			this.dataBook = new System.Windows.Forms.DataGridView();
 			this.inputDate = new System.Windows.Forms.DateTimePicker();
+			this.lblCount = new System.Windows.Forms.Label();
 			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataBook)).BeginInit();
 			this.SuspendLayout();
@@ -168,6 +169,9 @@ namespace library_2121 {
 			// 
 			// dataBook
 			// 
+			this.dataBook.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.dataBook.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataBook.Location = new System.Drawing.Point(25, 200);
 			this.dataBook.Margin = new System.Windows.Forms.Padding(4);
@@ -188,11 +192,21 @@ namespace library_2121 {
 			this.inputDate.TabIndex = 10;
 			this.inputDate.Value = new System.DateTime(2021, 9, 5, 0, 0, 0, 0);
 			// 
+			// lblCount
+			// 
+			this.lblCount.AutoSize = true;
+			this.lblCount.Location = new System.Drawing.Point(262, 160);
+			this.lblCount.Name = "lblCount";
+			this.lblCount.Size = new System.Drawing.Size(127, 21);
+			this.lblCount.TabIndex = 11;
+			this.lblCount.Text = "共 0 个结果";
+			// 
 			// BorrowQuery
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1445, 1001);
+			this.Controls.Add(this.lblCount);
 			this.Controls.Add(this.inputDate);
 			this.Controls.Add(this.dataBook);
 			this.Controls.Add(this.btnQuit);
@@ -230,5 +244,6 @@ namespace library_2121 {
 		private System.Windows.Forms.Button btnQuit;
 		public System.Windows.Forms.DataGridView dataBook;
 		private System.Windows.Forms.DateTimePicker inputDate;
+		private System.Windows.Forms.Label lblCount;
 	}
 }

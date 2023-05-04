@@ -24,7 +24,7 @@ namespace library_2121 {
 			Entities db = new Entities();
 			dataBook.DataSource = (from o in db.book
 								   orderby o.rkrq descending
-								   select o).ToList();
+								   select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
@@ -34,36 +34,36 @@ namespace library_2121 {
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
 				dt = (from o in db.book
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else if (radioId.Checked) {
 				dt= (from o in db.book
 					where o.tsbh==param
 					orderby o.rkrq descending
-					select o).ToList();
+					select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else if (radioType.Checked) {
 				dt = (from o in db.book
 					 where o.fenlei == param
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else if (radioName.Checked) {
 				dt = (from o in db.book
 					 where o.shuming.Contains(param)
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else if (radioAuthor.Checked) {
 				dt = (from o in db.book
 					 where o.zuozhe == param
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else if (radioPublisher.Checked) {
 				dt = (from o in db.book
 					 where o.chubanhse == param
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			} else {
 				dt = (from o in db.book
 					 orderby o.rkrq descending
-					 select o).ToList();
+					 select new { o.tsbh, o.fenlei, o.shuming, o.zuozhe, o.chubanhse, o.chubanriqi, o.dingjia, o.rkrq, o.zt, o.sfwz, o.beizhu }).ToList();
 			}
 
 			dataBook.DataSource = dt;
@@ -85,14 +85,18 @@ namespace library_2121 {
 							 where o.tsbh == intId
 							 select o).FirstOrDefault();
 				if (book == null) {
-					MessageBox.Show("删除失败！", "软件提示");
+					MessageBox.Show("删除失败！book null", "软件提示");
 					return;
 				}
 
 				db.book.Remove(book);
-				db.SaveChanges();
-				dataBook.Rows.Remove(dgvr);
-				MessageBox.Show("删除成功！", "软件提示");
+				try {
+					db.SaveChanges();
+					dataBook.Rows.Remove(dgvr);
+					MessageBox.Show("删除成功！", "软件提示");
+				} catch(Exception ex) {
+					MessageBox.Show("删除失败！", "软件提示");
+				}
 			}
 		}
 

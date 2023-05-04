@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using library_2121.Data;
 
 namespace library_2121 {
 	public partial class UserManager : Form {
@@ -20,23 +21,31 @@ namespace library_2121 {
 		}
 
 		void RefreshData() {
-			string sql = "SELECT * FROM open1 ORDER BY 创建时间 DESC";
-			dataUser.DataSource = Utils.ExecuteQuery(sql).DefaultView;
+			Entities db = new Entities();
+			dataUser.DataSource = (from o in db.open1
+								   where o.jibie=="a"
+								   orderby o.cjsj descending
+								   select new { o.user_name, o.name, o.card, o.email, o.phone, o.cjsj }).ToList();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
-			string sql = "SELECT * FROM open1 ORDER BY 创建时间 DESC";
 			string param = textBox.Text;
+			Entities db = new Entities();
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部")
 			{
-				sql = "SELECT * FROM open1 ORDER BY 创建时间 DESC";
+				dataUser.DataSource = (from o in db.open1
+									   where o.jibie == "a"
+									   orderby o.cjsj descending
+									   select new { o.user_name, o.name, o.card, o.email, o.phone, o.cjsj }).ToList();
 			}
 			else
 			{
-				sql = "SELECT * FROM open1 WHERE 用户名={0} ORDER BY 创建时间 DESC";
+				dataUser.DataSource = (from o in db.open1
+									   where o.jibie == "a"
+									   where o.user_name == param
+									   orderby o.cjsj descending
+									   select new { o.user_name, o.name, o.card, o.email, o.phone, o.cjsj }).ToList();
 			}
-			
-			dataUser.DataSource = Utils.ExecuteQuery(sql, param).DefaultView;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e) {
@@ -49,11 +58,19 @@ namespace library_2121 {
 			}
 			if (MessageBox.Show("确定要删除吗？", "软件提示", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes) {
 				DataGridViewRow dgvr = dataUser.CurrentRow;
-				string intId = Convert.ToString(dgvr.Cells["用户名"].Value);
-				if (Utils.ExecuteUpdate("Delete From open1 Where 用户名 = @0", intId) >0) {
-					dataUser.Rows.Remove(dgvr);
+				string id = Convert.ToString(dgvr.Cells["user_name"].Value);
+
+				Entities db = new Entities();
+				var user = (from o in db.open1 where o.user_name==id select o).FirstOrDefault();
+				if (user == null) {
+					MessageBox.Show("删除失败！", "软件提示");
+				}
+				db.open1.Remove(user);
+
+				try {
+					db.SaveChanges();
 					MessageBox.Show("删除成功！", "软件提示");
-				} else {
+				} catch {
 					MessageBox.Show("删除失败！", "软件提示");
 				}
 			}

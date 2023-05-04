@@ -24,7 +24,7 @@ namespace library_2121 {
 			Entities db = new Entities();
 			dataReader.DataSource = (from o in db.reader
 									 orderby o.djrq descending
-									 select o).ToList();
+									 select new { o.jszh,o.name,o.sex,o.danwei,o.jibie,o.yjss,o.djrq,o.phone,o.email,o.guashi,o.gqfk,o.jieshuzongshu,o.jsts}).ToList();
 		}
 
 		private void btnQuery_Click(object sender, EventArgs e) {
@@ -33,21 +33,21 @@ namespace library_2121 {
 			if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text == "全部") {
 				dataReader.DataSource = (from o in db.reader
 										 orderby o.djrq descending
-										 select o).ToList();
+										 select new { o.jszh, o.name, o.sex, o.danwei, o.jibie, o.yjss, o.djrq, o.phone, o.email, o.guashi, o.gqfk, o.jieshuzongshu, o.jsts }).ToList();
 			}else if (radioId.Checked) {
 				dataReader.DataSource = (from o in db.reader
 										 where o.jszh==param
 										 orderby o.djrq descending
-										 select o).ToList();
+										 select new { o.jszh, o.name, o.sex, o.danwei, o.jibie, o.yjss, o.djrq, o.phone, o.email, o.guashi, o.gqfk, o.jieshuzongshu, o.jsts }).ToList();
 			} else if (radioName.Checked) {
 				dataReader.DataSource = (from o in db.reader
 										 where o.name.Contains(param)
 										 orderby o.djrq descending
-										 select o).ToList();
+										 select new { o.jszh, o.name, o.sex, o.danwei, o.jibie, o.yjss, o.djrq, o.phone, o.email, o.guashi, o.gqfk, o.jieshuzongshu, o.jsts }).ToList();
 			} else {
 				dataReader.DataSource = (from o in db.reader
 										 orderby o.djrq descending
-										 select o).ToList();
+										 select new { o.jszh, o.name, o.sex, o.danwei, o.jibie, o.yjss, o.djrq, o.phone, o.email, o.guashi, o.gqfk, o.jieshuzongshu, o.jsts }).ToList();
 			}
 		}
 
@@ -71,9 +71,13 @@ namespace library_2121 {
 					return;
 				}
 				db.reader.Remove(reader);
-				db.SaveChanges();
-				dataReader.Rows.Remove(dgvr);
-				MessageBox.Show("删除成功！", "软件提示");
+				try {
+					db.SaveChanges();
+					dataReader.Rows.Remove(dgvr);
+					MessageBox.Show("删除成功！", "软件提示");
+				} catch {
+					MessageBox.Show("删除失败！", "软件提示");
+				}
 			}
 		}
 

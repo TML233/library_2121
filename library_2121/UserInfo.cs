@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
+using library_2121.Data;
 
 namespace library_2121 {
 	public partial class UserInfo : Form {
@@ -50,13 +51,16 @@ namespace library_2121 {
 			}
 			if (mode == Mode.AdminEdit) {
 				inputUser.ReadOnly = true;
-				inputUser.Text = user.dataUser.CurrentRow.Cells["用户名"].Value.ToString();
-				inputName.Text = user.dataUser.CurrentRow.Cells["姓名"].Value.ToString();
-				inputPassword.Text = user.dataUser.CurrentRow.Cells["口令"].Value.ToString();
-				inputPassword2.Text = user.dataUser.CurrentRow.Cells["口令"].Value.ToString();
-				inputIden.Text = user.dataUser.CurrentRow.Cells["身份证号"].Value.ToString();
-				inputEmail.Text = user.dataUser.CurrentRow.Cells["邮箱"].Value.ToString();
-				inputPhone.Text = user.dataUser.CurrentRow.Cells["手机号码"].Value.ToString();
+				string uname= user.dataUser.CurrentRow.Cells["user_name"].Value.ToString();
+				inputUser.Text = uname;
+				inputName.Text = user.dataUser.CurrentRow.Cells["name"].Value.ToString();
+				Entities db = new Entities();
+				string password = (from o in db.open1 where o.user_name == uname select o.password).FirstOrDefault();
+				inputPassword.Text = password;
+				inputPassword2.Text = password;
+				inputIden.Text = user.dataUser.CurrentRow.Cells["card"].Value.ToString();
+				inputEmail.Text = user.dataUser.CurrentRow.Cells["email"].Value.ToString();
+				inputPhone.Text = user.dataUser.CurrentRow.Cells["phone"].Value.ToString();
 			}
 		}
 
@@ -71,18 +75,10 @@ namespace library_2121 {
 				return;
 			}
 
+			Entities db = new Entities();
 			if (mode != Mode.AdminEdit) {
-				SqlConnection conn = new SqlConnection(Utils.ConnectionString);
-				conn.Open();
-				SqlCommand cmd = new SqlCommand("SELECT * FROM open1 WHERE 用户名=@User", conn);
-				cmd.Parameters.AddWithValue("@User", user);
-				var reader = cmd.ExecuteReader();
-				bool has = false;
-				if (reader.Read()) {
-					has = true;
-				}
-				conn.Close();
-				if (has) {
+				var uu = (from o in db.open1 where o.user_name == user select o).FirstOrDefault();
+				if (uu != null) {
 					MessageBox.Show("用户名重复！");
 					return;
 				}
@@ -146,26 +142,40 @@ namespace library_2121 {
 			}
 
 			if (mode != Mode.AdminEdit) {
-				int affected = Utils.ExecuteUpdate(
-					"INSERT INTO open1(用户名,口令,级别,姓名,身份证号,邮箱,手机号码,创建时间) VALUES(@0,@1,@2,@3,@4,@5,@6,@7)",
-					user, password, "a", name, iden, email, phone, DateTimeOffset.Now.ToString()
-				);
-				if (affected > 0) {
+				var uu = new open1 {
+					user_name = user,
+					password = password,
+					jibie = "a",
+					name = name,
+					card = iden,
+					email = email,
+					phone = phone,
+					cjsj = DateTime.Now
+				};
+				db.open1.Add(uu);
+				try {
+					db.SaveChanges();
 					MessageBox.Show("注册成功！");
-					Close();
-				} else {
+				} catch {
 					MessageBox.Show("注册失败！");
 				}
 			} else {
-				int affected = Utils.ExecuteUpdate(
-					"UPDATE open1 set 口令=@1, 级别=@2, 姓名=@3, 身份证号=@4, 邮箱=@5, 手机号码=@6 WHERE 用户名=@0",
-					user, password, "a", name, iden, email, phone
-				);
-				if (affected > 0) {
-					MessageBox.Show("修改成功！");
-					Close();
-				} else {
+				var uu = (from o in db.open1 where o.user_name == user select o).FirstOrDefault();
+				if (uu == null) {
 					MessageBox.Show("修改失败！");
+					return;
+				} else {
+					uu.password = password;
+					uu.name = name;
+					uu.jibie = iden;
+					uu.email = email;
+					uu.phone = phone;
+					try {
+						db.SaveChanges();
+						MessageBox.Show("修改成功！");
+					} catch {
+						MessageBox.Show("修改失败！");
+					}
 				}
 			}
 		}

@@ -56,6 +56,7 @@ namespace library_2121 {
 					book.chubanhse = inputPublisher.Text;
 					book.chubanriqi = datePublish.Value.Date;
 					book.dingjia = double.Parse(inputPrice.Text);
+					book.rkrq=dateEnter.Value;
 					book.zt = inputStatus.Text;
 					book.sfwz = comboPosition.Text;
 					book.beizhu = inputComment.Text;
@@ -71,6 +72,7 @@ namespace library_2121 {
 					chubanhse = inputPublisher.Text,
 					chubanriqi = datePublish.Value.Date,
 					dingjia = double.Parse(inputPrice.Text),
+					rkrq = dateEnter.Value,
 					zt = inputStatus.Text,
 					sfwz = comboPosition.Text,
 					beizhu = inputComment.Text

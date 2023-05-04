@@ -68,5 +68,13 @@ namespace library_2121
 		private void 借书ToolStripMenuItem_Click(object sender, EventArgs e) {
 			new BorrowPage().ShowDialog();
 		}
+
+		private void 续签ToolStripMenuItem_Click(object sender, EventArgs e) {
+			new ContinueBorrowPage().ShowDialog();
+		}
+
+		private void 预约ToolStripMenuItem_Click(object sender, EventArgs e) {
+			new AppointmentPage().ShowDialog();
+		}
 	}
 }

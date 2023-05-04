@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
+using library_2121.Data;
 
 namespace library_2121 {
 	public partial class PasswordChange : Form {
@@ -26,37 +27,22 @@ namespace library_2121 {
 				return;
 			}
 
-			{
-				SqlConnection conn = new SqlConnection(Utils.ConnectionString);
-				conn.Open();
-				SqlCommand cmd = new SqlCommand("SELECT * FROM open1 WHERE 用户名=@User", conn);
-				cmd.Parameters.AddWithValue("@User", user);
-				var reader = cmd.ExecuteReader();
-				bool has = false;
-				if (reader.Read()) {
-					has = true;
-				}
-				conn.Close();
-				if (!has) {
-					MessageBox.Show("用户名错误！");
-					return;
-				}
+			Entities db = new Entities();
+			var uu = (from o in db.open1
+					  where o.user_name == user
+					  select o).FirstOrDefault();
+			if (uu == null) {
+				MessageBox.Show("用户名错误！");
+				return;
+			}
+			if (uu.jibie != "b") {
+				MessageBox.Show("只能修改管理员！");
+				return;
 			}
 
 			string oldPass = inputOld.Text;
 			{
-				SqlConnection conn = new SqlConnection(Utils.ConnectionString);
-				conn.Open();
-				SqlCommand cmd = new SqlCommand("SELECT * FROM open1 WHERE 用户名=@User AND 口令=@Old", conn);
-				cmd.Parameters.AddWithValue("@User", user);
-				cmd.Parameters.AddWithValue("@Old", oldPass);
-				var reader = cmd.ExecuteReader();
-				bool has = false;
-				if (reader.Read()) {
-					has = true;
-				}
-				conn.Close();
-				if (!has) {
+				if (uu.password != oldPass) {
 					MessageBox.Show("旧密码错误！");
 					return;
 				}
@@ -77,14 +63,11 @@ namespace library_2121 {
 				return;
 			}
 
-			int affected = Utils.ExecuteUpdate(
-				"UPDATE open1 set 口令=@0 WHERE 用户名=@1",
-				user, password
-			);
-			if (affected > 0) {
+			uu.password = password;
+			try {
+				db.SaveChanges();
 				MessageBox.Show("修改成功！");
-				Close();
-			} else {
+			} catch {
 				MessageBox.Show("修改失败！");
 			}
 		}
